@@ -32,10 +32,10 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_users_roles
-        FOREIGN KEY (role_id)
-        REFERENCES roles(role_id)
-        ON UPDATE CASCADE
-        ON DELETE RESTRICT
+    FOREIGN KEY (role_id)
+    REFERENCES roles(role_id)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
 );
 
 -- ==========================================
@@ -87,10 +87,10 @@ CREATE TABLE equipment (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_equipment_category
-        FOREIGN KEY (category_id)
-        REFERENCES categories(category_id)
-        ON UPDATE CASCADE
-        ON DELETE RESTRICT,
+    FOREIGN KEY (category_id)
+    REFERENCES categories(category_id)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
 
     CONSTRAINT chk_equipment_status
         CHECK (
@@ -138,10 +138,10 @@ CREATE TABLE maintenance_records (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_maintenance_equipment
-        FOREIGN KEY (equipment_id)
-        REFERENCES equipment(equipment_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
+    FOREIGN KEY (equipment_id)
+    REFERENCES equipment(equipment_id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 
     CONSTRAINT chk_maintenance_type
         CHECK (
@@ -173,10 +173,10 @@ CREATE TABLE datasheets (
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_datasheet_equipment
-        FOREIGN KEY (equipment_id)
-        REFERENCES equipment(equipment_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
+    FOREIGN KEY (equipment_id)
+    REFERENCES equipment(equipment_id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 -- ==========================================
