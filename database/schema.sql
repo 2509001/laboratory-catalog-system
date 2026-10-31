@@ -108,7 +108,7 @@ CREATE TABLE equipment (
         CHECK (
             official_inventory_number IS NOT NULL
             OR internal_lab_number IS NOT NULL
-        )
+)
 );
 
 -- ==========================================
