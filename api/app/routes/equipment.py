@@ -12,8 +12,32 @@ def get_equipment():
     with engine.connect() as connection:
 
         result = connection.execute(
-            text(
-                """
+            text("""
+                SELECT
+                    equipment_id,
+                    official_inventory_number,
+                    internal_lab_number,
+                    name,
+                    brand,
+                    model,
+                    location,
+                    operational_status
+                FROM equipment
+            """)
+        )
+
+        rows = result.mappings().all()
+
+        return rows
+
+
+@router.get("/equipment/{equipment_id}")
+def get_equipment_by_id(equipment_id: str):
+
+    with engine.connect() as connection:
+
+        result = connection.execute(
+            text("""
                 SELECT
                     equipment_id,
                     name,
@@ -21,10 +45,18 @@ def get_equipment():
                     model,
                     operational_status
                 FROM equipment
-                """
-            )
+                WHERE equipment_id = :equipment_id
+            """),
+            {
+                "equipment_id": equipment_id
+            }
         )
 
-        rows = result.mappings().all()
+        row = result.mappings().first()
 
-        return rows
+        if row is None:
+            return {
+                "error": "Equipment not found"
+            }
+
+        return row
