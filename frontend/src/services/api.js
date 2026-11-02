@@ -1,7 +1,13 @@
-import axios from "axios";
+const API_URL = "http://127.0.0.1:8000";
 
-const api = axios.create({
-  baseURL: "http://127.0.0.1:8000"
-});
+export async function createEquipment(data) {
+  const response = await fetch(`${API_URL}/equipment`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
 
-export default api;
+  return response.json();
+}
