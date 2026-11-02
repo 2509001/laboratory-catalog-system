@@ -1,6 +1,7 @@
 import {
     renderEquipmentCatalog,
-    setupSearch
+    setupSearch,
+    setupStatusUpdate
 } from "./pages/EquipmentCatalog.js";
 
 async function start() {
@@ -9,6 +10,9 @@ async function start() {
         await renderEquipmentCatalog();
 
     await setupSearch();
+
+    setupStatusUpdate();
+
 }
 
 start();
