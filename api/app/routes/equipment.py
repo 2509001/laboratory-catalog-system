@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from fastapi import APIRouter
 from sqlalchemy import text
 
@@ -45,9 +47,12 @@ def get_equipment_by_id(equipment_id: str):
             text("""
                 SELECT
                     equipment_id,
+                    official_inventory_number,
+                    internal_lab_number,
                     name,
                     brand,
                     model,
+                    location,
                     operational_status
                 FROM equipment
                 WHERE equipment_id = :equipment_id
@@ -70,9 +75,53 @@ def get_equipment_by_id(equipment_id: str):
 @router.post("/equipment")
 def create_equipment(equipment: EquipmentCreate):
 
+    equipment_id = str(uuid4())
+
+    with engine.connect() as connection:
+
+        connection.execute(
+            text("""
+                INSERT INTO equipment (
+                    equipment_id,
+                    official_inventory_number,
+                    internal_lab_number,
+                    name,
+                    brand,
+                    model,
+                    location,
+                    operational_status,
+                    category_id
+                )
+                VALUES (
+                    :equipment_id,
+                    :official_inventory_number,
+                    :internal_lab_number,
+                    :name,
+                    :brand,
+                    :model,
+                    :location,
+                    :operational_status,
+                    :category_id
+                )
+            """),
+            {
+                "equipment_id": equipment_id,
+                "official_inventory_number": equipment.official_inventory_number,
+                "internal_lab_number": equipment.internal_lab_number,
+                "name": equipment.name,
+                "brand": equipment.brand,
+                "model": equipment.model,
+                "location": equipment.location,
+                "operational_status": equipment.operational_status,
+                "category_id": equipment.category_id
+            }
+        )
+
+        connection.commit()
+
     return {
-        "message": "Equipment received successfully",
-        "equipment": equipment.model_dump()
+        "message": "Equipment created successfully",
+        "equipment_id": equipment_id
     }
 
 
@@ -82,11 +131,28 @@ def update_equipment_status(
     status_update: EquipmentStatusUpdate
 ):
 
+    with engine.connect() as connection:
+
+        connection.execute(
+            text("""
+                UPDATE equipment
+                SET operational_status = :status
+                WHERE equipment_id = :equipment_id
+            """),
+            {
+                "status": status_update.operational_status,
+                "equipment_id": equipment_id
+            }
+        )
+
+        connection.commit()
+
     return {
         "message": "Equipment status updated",
         "equipment_id": equipment_id,
         "new_status": status_update.operational_status
     }
+
 
 @router.post("/equipment/{equipment_id}/maintenance")
 def create_maintenance(
@@ -94,8 +160,40 @@ def create_maintenance(
     maintenance: MaintenanceCreate
 ):
 
+    maintenance_id = str(uuid4())
+
+    with engine.connect() as connection:
+
+        connection.execute(
+            text("""
+                INSERT INTO maintenance_records (
+                    maintenance_id,
+                    equipment_id,
+                    maintenance_date,
+                    maintenance_type,
+                    description
+                )
+                VALUES (
+                    :maintenance_id,
+                    :equipment_id,
+                    :maintenance_date,
+                    :maintenance_type,
+                    :description
+                )
+            """),
+            {
+                "maintenance_id": maintenance_id,
+                "equipment_id": equipment_id,
+                "maintenance_date": maintenance.maintenance_date,
+                "maintenance_type": maintenance.maintenance_type,
+                "description": maintenance.description
+            }
+        )
+
+        connection.commit()
+
     return {
         "message": "Maintenance record created",
-        "equipment_id": equipment_id,
-        "maintenance": maintenance.model_dump()
+        "maintenance_id": maintenance_id,
+        "equipment_id": equipment_id
     }
