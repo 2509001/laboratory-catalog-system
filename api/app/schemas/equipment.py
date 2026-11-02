@@ -1,12 +1,15 @@
 from pydantic import BaseModel
 
 
-class EquipmentResponse(BaseModel):
-    equipment_id: str
+class EquipmentCreate(BaseModel):
+    official_inventory_number: str | None = None
+    internal_lab_number: str | None = None
+
     name: str
     brand: str | None = None
     model: str | None = None
+
+    location: str
     operational_status: str
 
-    class Config:
-        from_attributes = True
+    category_id: str

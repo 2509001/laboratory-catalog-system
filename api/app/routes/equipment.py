@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from sqlalchemy import text
 
 from app.db.database import engine
+from app.schemas.equipment import EquipmentCreate
 
 router = APIRouter()
 
@@ -60,3 +61,12 @@ def get_equipment_by_id(equipment_id: str):
             }
 
         return row
+
+
+@router.post("/equipment")
+def create_equipment(equipment: EquipmentCreate):
+
+    return {
+        "message": "Equipment received successfully",
+        "equipment": equipment.model_dump()
+    }
