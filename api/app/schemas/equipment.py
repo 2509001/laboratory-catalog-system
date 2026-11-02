@@ -13,3 +13,12 @@ class EquipmentCreate(BaseModel):
     operational_status: str
 
     category_id: str
+
+
+class EquipmentStatusUpdate(BaseModel):
+    operational_status: str
+
+class MaintenanceCreate(BaseModel):
+    maintenance_date: str
+    maintenance_type: str
+    description: str

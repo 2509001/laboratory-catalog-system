@@ -2,7 +2,11 @@ from fastapi import APIRouter
 from sqlalchemy import text
 
 from app.db.database import engine
-from app.schemas.equipment import EquipmentCreate
+from app.schemas.equipment import (
+    EquipmentCreate,
+    EquipmentStatusUpdate,
+    MaintenanceCreate
+)
 
 router = APIRouter()
 
@@ -69,4 +73,29 @@ def create_equipment(equipment: EquipmentCreate):
     return {
         "message": "Equipment received successfully",
         "equipment": equipment.model_dump()
+    }
+
+
+@router.patch("/equipment/{equipment_id}/status")
+def update_equipment_status(
+    equipment_id: str,
+    status_update: EquipmentStatusUpdate
+):
+
+    return {
+        "message": "Equipment status updated",
+        "equipment_id": equipment_id,
+        "new_status": status_update.operational_status
+    }
+
+@router.post("/equipment/{equipment_id}/maintenance")
+def create_maintenance(
+    equipment_id: str,
+    maintenance: MaintenanceCreate
+):
+
+    return {
+        "message": "Maintenance record created",
+        "equipment_id": equipment_id,
+        "maintenance": maintenance.model_dump()
     }
