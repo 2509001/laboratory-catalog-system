@@ -1,9 +1,14 @@
 import {
-  renderEquipmentForm,
-  setupEquipmentForm
-} from "./pages/EquipmentForm.js";
+    renderEquipmentCatalog,
+    setupSearch
+} from "./pages/EquipmentCatalog.js";
 
-document.getElementById("app").innerHTML =
-  renderEquipmentForm();
+async function start() {
 
-setupEquipmentForm();
+    document.getElementById("app").innerHTML =
+        await renderEquipmentCatalog();
+
+    await setupSearch();
+}
+
+start();
